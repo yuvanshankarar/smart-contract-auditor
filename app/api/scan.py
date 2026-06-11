@@ -1,8 +1,13 @@
+import json
+
+from app.database import SessionLocal
+from app.models.scan import Scan
 from fastapi import APIRouter, UploadFile, File
 import os
 
 from app.storage.last_scan import LAST_SCAN
 from app.graphs.audit_graph import graph
+from app.storage.scan_history import SCAN_HISTORY
 
 from app.analyzers.slither_analyzer import run_slither
 from app.analyzers.slither_parser import parse_slither_output
@@ -67,6 +72,33 @@ async def scan_contract(
     LAST_SCAN.clear()
 
     LAST_SCAN.update(result)
+
+    db = SessionLocal()
+
+    db_scan = Scan(
+        filename=result["filename"],
+        score=result["score"],
+        risk_level=result["risk_level"],
+        findings=json.dumps(result["findings"]),
+        explanation=result["explanation"],
+        remediation=result["remediation"],
+        report_path=result["report_path"]
+   )
+
+    print("Saving scan to database...")
+    print("Filename:", result["filename"])
+    print("Score:", result["score"])
+
+    db.add(db_scan)
+
+    try:
+        db.commit()
+        print("Scan saved successfully!")
+    except Exception as e:
+        print("DATABASE ERROR:", e)
+        db.rollback()
+
+    db.close()
 
     return {
         "filename": result["filename"],
