@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Contract Auditor
 
-## Getting Started
+AI-powered Smart Contract Security Auditor built with FastAPI, Next.js, LangGraph, and Slither.
 
-First, run the development server:
+## Features
+
+* Real Slither vulnerability detection
+* AI-generated security explanations
+* Remediation recommendations
+* Dynamic security scoring
+* PDF audit report generation
+* Scan history persistence with SQLite
+* Interactive Next.js dashboard
+* LangGraph multi-agent workflow
+
+## Architecture
+
+Frontend:
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+
+Backend:
+
+* FastAPI
+* LangGraph
+* SQLAlchemy
+* SQLite
+
+Security Analysis:
+
+* Slither
+* Custom scoring engine
+
+Reporting:
+
+* ReportLab PDF generation
+
+## Workflow
+
+1. Upload Solidity contract
+2. Run Slither analysis
+3. Parse findings
+4. Calculate security score
+5. Generate AI explanation
+6. Generate remediation guidance
+7. Create PDF audit report
+8. Store results in SQLite
+9. Display findings in dashboard
+
+## Example Findings
+
+* Reentrancy
+* Low-level calls
+* Solidity version issues
+* Access control vulnerabilities
+* Other Slither-supported detectors
+
+## Screenshots
+
+Add screenshots here:
+
+* Dashboard
+* Findings Table
+* Scan History
+* PDF Report
+
+## Local Setup
+
+### Backend
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Frontend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Future Improvements
 
-## Learn More
+* Docker deployment
+* GitHub Actions CI/CD
+* User authentication
+* Multi-file project scanning
+* Severity filtering
+* Detailed scan pages
+* Cloud deployment
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Python
+* FastAPI
+* LangGraph
+* Slither
+* SQLAlchemy
+* SQLite
+* Next.js
+* TypeScript
+* Tailwind CSS
+* ReportLab
