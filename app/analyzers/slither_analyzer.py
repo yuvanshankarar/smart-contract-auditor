@@ -1,24 +1,22 @@
-import subprocess
-import shutil
-
-SLITHER = shutil.which("slither")
-
-
 def run_slither(contract_path):
+    """
+    Temporary mock Slither output.
 
-    cmd = f'"{SLITHER}" "{contract_path}"'
+    Replace with real Slither integration later.
+    """
 
-    print("COMMAND:", cmd)
+    print("Mock Slither Scan Running")
+    print("Contract:", contract_path)
 
-    result = subprocess.run(
-        cmd,
-        shell=True,
-        capture_output=True,
-        text=True
-    )
-
-    print("RETURN CODE:", result.returncode)
-    print("STDOUT:", result.stdout)
-    print("STDERR:", result.stderr)
-
-    return result.stdout
+    return {
+        "results": {
+            "detectors": [
+                {
+                    "check": "reentrancy-eth",
+                    "impact": "High",
+                    "confidence": "High",
+                    "description": "Reentrancy vulnerability detected."
+                }
+            ]
+        }
+    }

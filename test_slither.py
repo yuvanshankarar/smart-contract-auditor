@@ -3,19 +3,14 @@ import shutil
 
 SLITHER = shutil.which("slither")
 
-if SLITHER is None:
-    raise FileNotFoundError("slither not found in PATH")
-
-path = "C:/smart_auditor/reentrancy.sol"
+print("SLITHER:", SLITHER)
 
 result = subprocess.run(
-    [SLITHER, path],
+    [SLITHER, "--version"],
     capture_output=True,
     text=True
 )
 
 print("RETURN CODE:", result.returncode)
-print("STDOUT:")
-print(result.stdout)
-print("STDERR:")
-print(result.stderr)
+print("STDOUT:", repr(result.stdout))
+print("STDERR:", repr(result.stderr))

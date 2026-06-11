@@ -1,13 +1,22 @@
 import json
 
 
-def parse_slither_output(raw_json):
+def parse_slither_output(raw_data):
 
-    data = json.loads(raw_json)
+    if isinstance(raw_data, str):
+        data = json.loads(raw_data)
+    else:
+        data = raw_data
 
     findings = []
 
-    detectors = data.get("results", {}).get("detectors", [])
+    detectors = data.get(
+        "results",
+        {}
+    ).get(
+        "detectors",
+        []
+    )
 
     for detector in detectors:
 

@@ -5,6 +5,7 @@ from app.storage.last_scan import LAST_SCAN
 from app.graphs.audit_graph import graph
 
 from app.analyzers.slither_analyzer import run_slither
+from app.analyzers.slither_parser import parse_slither_output
 from app.analyzers.security_score import (
     calculate_score,
     get_risk_level
@@ -39,6 +40,7 @@ async def scan_contract(
 
     # Temporary hardcoded findings
     report = run_slither(file_path)
+    findings = parse_slither_output(report)
 
     findings = [
         {

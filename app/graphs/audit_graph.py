@@ -39,8 +39,8 @@ def explanation_node(state: AuditState):
     if state["findings"]:
         try:
             state["explanation"] = explain_vulnerability(
-                state["findings"][0]
-            )
+    state["findings"][0]["description"]
+)
         except Exception as e:
             state["explanation"] = (
                 f"AI explanation failed: {e}"

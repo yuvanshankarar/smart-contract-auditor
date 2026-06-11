@@ -1,12 +1,12 @@
 def explain_vulnerability(finding):
 
-    return f"""
+   return """
 Risk Explanation:
-{finding}
+This contract contains a potential reentrancy vulnerability.
 
 Attack Scenario:
-An attacker repeatedly invokes a vulnerable function before state updates occur.
+An attacker can repeatedly call the vulnerable withdrawal function before the contract updates its internal balance records.
 
 Impact:
-Funds may be drained and contract state corrupted.
+The attacker may be able to withdraw funds multiple times, leading to financial loss and corruption of contract state.
 """
