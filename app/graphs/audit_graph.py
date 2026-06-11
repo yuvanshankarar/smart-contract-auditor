@@ -3,33 +3,13 @@ from langgraph.graph import StateGraph, END
 from app.graphs.state import AuditState
 from app.services.ai_explainer import explain_vulnerability
 from app.reports.pdf_generator import generate_report
-from app.storage.last_scan import LAST_SCAN
+
 
 
 def scan_node(state: AuditState):
     print("Running Scan Agent")
 
-    # Use real scan if available
-    if LAST_SCAN:
-        state["findings"] = LAST_SCAN.get("findings", [])
-        state["score"] = LAST_SCAN.get("score", 0)
-        state["risk_level"] = LAST_SCAN.get(
-            "risk_level",
-            "Unknown"
-        )
-    else:
-        # Fallback test data
-        state["findings"] = [
-            {
-                "check": "reentrancy-eth",
-                "severity": "High",
-                "description": "Reentrancy vulnerability detected."
-            }
-        ]
-
-        state["score"] = 78
-        state["risk_level"] = "Medium"
-
+    # Use findings already passed into graph.invoke()
     return state
 
 

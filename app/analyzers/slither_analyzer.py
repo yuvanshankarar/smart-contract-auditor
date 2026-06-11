@@ -1,22 +1,37 @@
+import subprocess
+import json
+import shutil
+
+SLITHER = shutil.which("slither")
+
+
 def run_slither(contract_path):
-    """
-    Temporary mock Slither output.
 
-    Replace with real Slither integration later.
-    """
+    cmd = [
+        SLITHER,
+        contract_path,
+        "--json",
+        "-"
+    ]
 
-    print("Mock Slither Scan Running")
-    print("Contract:", contract_path)
+    result = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True
+    )
 
-    return {
-        "results": {
-            "detectors": [
-                {
-                    "check": "reentrancy-eth",
-                    "impact": "High",
-                    "confidence": "High",
-                    "description": "Reentrancy vulnerability detected."
-                }
-            ]
-        }
-    }
+    # Windows Slither sometimes returns a bad exit code
+    # even when valid JSON is produced.
+
+    if result.stdout.strip():
+
+        try:
+            return json.loads(result.stdout)
+        except Exception:
+            pass
+
+    raise Exception(
+        f"Slither failed\n"
+        f"Return code: {result.returncode}\n"
+        f"STDERR: {result.stderr}"
+    )

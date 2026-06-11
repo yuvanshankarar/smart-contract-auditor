@@ -13,25 +13,33 @@ def calculate_score(findings):
 
     for finding in findings:
 
-        severity = finding.get("severity", "Informational")
-
-        score -= SEVERITY_WEIGHTS.get(
-            severity,
-            0
+        severity = (
+            finding.get("severity", "")
+            .lower()
         )
+
+        if severity == "high":
+            score -= 30
+
+        elif severity == "medium":
+            score -= 15
+
+        elif severity == "low":
+            score -= 5
+
+        elif severity == "informational":
+            score -= 1
 
     return max(score, 0)
 
 
 def get_risk_level(score):
 
-    if score >= 90:
+    if score >= 80:
         return "Low"
 
-    elif score >= 70:
+    elif score >= 60:
         return "Medium"
 
-    elif score >= 50:
+    else:
         return "High"
-
-    return "Critical"

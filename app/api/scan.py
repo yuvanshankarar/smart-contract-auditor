@@ -1,13 +1,14 @@
 import json
+import os
+
+from fastapi import APIRouter, UploadFile, File
 
 from app.database import SessionLocal
 from app.models.scan import Scan
-from fastapi import APIRouter, UploadFile, File
-import os
 
 from app.storage.last_scan import LAST_SCAN
+
 from app.graphs.audit_graph import graph
-from app.storage.scan_history import SCAN_HISTORY
 
 from app.analyzers.slither_analyzer import run_slither
 from app.analyzers.slither_parser import parse_slither_output
@@ -21,8 +22,6 @@ router = APIRouter()
 UPLOAD_DIR = "contracts"
 
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
 @router.post("/scan-contract")
 async def scan_contract(
     file: UploadFile = File(...)
@@ -43,17 +42,36 @@ async def scan_contract(
             await file.read()
         )
 
-    # Temporary hardcoded findings
-    report = run_slither(file_path)
-    findings = parse_slither_output(report)
+    # Real Slither integration
+    try:
+        report = run_slither(file_path)
 
-    findings = [
-        {
-            "check": "reentrancy-eth",
-            "severity": "High",
-            "description": "Reentrancy vulnerability detected."
-        }
-    ]
+        
+
+        findings = parse_slither_output(report)
+
+       
+
+        if not findings:
+            findings = [
+                {
+                    "check": "no-findings",
+                    "severity": "Info",
+                    "description": "Slither completed but found no issues."
+                }
+            ]
+
+    except Exception as e:
+
+        print("SLITHER ERROR:", e)
+
+        findings = [
+            {
+                "check": "slither-error",
+                "severity": "Info",
+                "description": f"Slither failed: {str(e)}"
+            }
+        ]
 
     score = calculate_score(findings)
 
@@ -70,7 +88,6 @@ async def scan_contract(
     })
 
     LAST_SCAN.clear()
-
     LAST_SCAN.update(result)
 
     db = SessionLocal()
@@ -83,7 +100,7 @@ async def scan_contract(
         explanation=result["explanation"],
         remediation=result["remediation"],
         report_path=result["report_path"]
-   )
+    )
 
     print("Saving scan to database...")
     print("Filename:", result["filename"])
